@@ -360,7 +360,7 @@ const xmPercent = computed(() => {
   position: fixed;
   inset: 0;
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   background: #00050d;
   overflow: hidden;
   font-family: 'Courier New', Courier, monospace;
