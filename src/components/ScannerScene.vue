@@ -356,8 +356,10 @@ onBeforeRender(({ delta }) => {
 
 // Позиции HTML-оверлеев в экранных координатах: HUD снизу по центру, панель фракций — по центру
 // Сигнатура calculatePosition в cientos: (instance, camera, size) => [x, y]
+// ВАЖНО: Html ставит элемент ВЕРХНИМ ЛЕВЫМ углом в точку анкера, поэтому центрирование
+// и прижим к низу делаются CSS-трансформацией на самих панелях (см. стили ниже)
 const hudPosition = (_instance, _camera, size) => {
-  return [size.width / 2, size.height - 190]
+  return [size.width / 2, size.height]
 }
 const screenCenter = (_instance, _camera, size) => {
   return [size.width / 2, size.height / 2]
@@ -528,6 +530,11 @@ const xmPercent = computed(() => {
   padding: 12px 16px;
   box-sizing: border-box;
   user-select: none;
+  /* Html ставит элемент верхним левым углом в точку анкера (низ экрана):
+     центрируем по X и прижимаем нижнюю грань панели к низу экрана */
+  transform: translate(-50%, calc(-100% - 10px));
+  max-height: calc(100vh - 24px);
+  overflow-y: auto;
 }
 .panel-title {
   font-size: 18px;
@@ -543,6 +550,9 @@ const xmPercent = computed(() => {
   box-shadow: 0 0 25px rgba(0, 168, 255, 0.3);
   padding: 22px;
   box-sizing: border-box;
+  /* Html ставит элемент верхним левым углом в точку анкера (центр экрана):
+     сдвигаем на половину размеров, чтобы панель была по-настоящему по центру */
+  transform: translate(-50%, -50%);
 }
 .faction-row {
   display: flex;
@@ -722,5 +732,49 @@ const xmPercent = computed(() => {
 .dp.right {
   grid-column: 3;
   grid-row: 2;
+}
+
+/* Мобильная раскладка: компактный HUD, элементы не должны вылезать за экран */
+@media (max-width: 560px), (max-height: 520px) {
+  .hud {
+    padding: 8px 10px;
+  }
+  .instruction {
+    font-size: 11px;
+    margin-bottom: 8px;
+  }
+  .controls {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .actions {
+    order: -1;
+    width: 100%;
+  }
+  .ing-btn {
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  .dpad {
+    grid-template-columns: repeat(3, 42px);
+    grid-template-rows: repeat(2, 42px);
+  }
+  .dp {
+    font-size: 16px;
+  }
+  .keys-tag {
+    width: 60px;
+  }
+  .portal-tag {
+    width: 110px;
+  }
+  .fac-btn {
+    padding: 12px 8px;
+    font-size: 13px;
+  }
+  .panel-title {
+    font-size: 15px;
+  }
 }
 </style>
